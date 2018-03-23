@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>旋转轮播图</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="shortcut icon" href="favicon.ico">
+    <style>
+        .dot {
+            height: 0px;
+            width: 0px;
+            position: absolute;
+            left: 50%;
+            top: 350px;
+        }
+
+        .dot a {
+            position: absolute;
+        }
+
+        a img {
+            width: 100%;
+        }
+        .circle{
+            top: 5px;
+        }
+    </style>
+    <script src="js/my.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        window.onload = function () {
+            var a = 750, b = 400;
+            var pic_height = 600, pic_width = 800;
+            var pic_num = 6;
+            var rotate_json = [];
+
+            function get_rotatex(st) {
+                return Math.round(a / 2 * Math.cos(st) - get_rotatewidth(st) / 2);
+            }
+
+            function get_rotatey(st) {
+                return Math.round((-1) * b / 2 * Math.sin(st)-get_rotateheight(st)/2);
+            }
+
+            function get_rotateratio(st) {
+                var deadline = 0.3;
+                var st_relatively = 0, ratio = 0;
+                if (st <= Math.PI / 2 && st >= Math.PI / (-2)) {
+                    st_relatively = st;
+                } else {
+                    st_relatively = st - (st - Math.PI / 2) * 2;
+                }
+                ratio = (1 - (st_relatively - (Math.PI / (-2))) / Math.PI * (1 - deadline));
+                return ratio
+            }
+
+            function get_rotatewidth(st) {
+                var ratio = get_rotateratio(st);
+                return Math.round(pic_width * ratio);
+            }
+
+            function get_rotateheight(st) {
+                var ratio = get_rotateratio(st);
+                return Math.round(pic_height * ratio);
+            }
+
+            function get_rotateopacity(st) {
+                var ratio = get_rotateratio(st);
+                return Math.round(100 * ratio);
+            }
+
+            function get_rotatez(pic_current) {
+                var middle_pic = Math.ceil(pic_num / 2) + 1;
+                if (pic_current > middle_pic) {
+                    pic_current = pic_current - (pic_current - middle_pic) * 2;
+                }
+                return middle_pic - pic_current + 1;
+            }
+
+            for (var i = 0; i < pic_num; i++) {
+                var st = i * 2 * Math.PI / pic_num - Math.PI / 2;
+                var json = {
+                    height: get_rotateheight(st),
+                    width: get_rotatewidth(st),
+                    top: get_rotatey(st),
+                    left: get_rotatex(st),
+                    opacity: get_rotateopacity(st),
+                    zIndex: get_rotatez(i + 1)
+                }
+                rotate_json.push(json);
+            }
+            function setstyle(pic, current) {
+                pic.style.height = rotate_json[current].height + "px";
+                pic.style.width = rotate_json[current].width + "px";
+                pic.style.top = rotate_json[current].top + "px";
+                pic.style.left = rotate_json[current].left + "px";
+                pic.style.zIndex = rotate_json[current].zIndex;
+                update_opacity(pic, rotate_json[current].opacity);
+            }
+            
+            function current_rotate(index,lis) {
+                if (index != lis.current) {
+                    if(index > lis.current){
+                        for(var i= lis.current;i<index;i++){
+                            //移除第一个，并放到最后
+                            rotate_json.push(rotate_json.shift());
+                        }
+                    }else{
+                        for(var i= index;i<lis.current;i++){
+                            //移除最后一个，并放到第一
+                            rotate_json.unshift(rotate_json.pop());
+                        }
+                    }
+                    for(var i= 0;i<lis.length;i++){
+                        move_slow_or_constant(pics[i],rotate_json[i],"slow");
+                    }
+                    lis[index].className = "current";//设置类名，使得样式改变
+                    //消除本来的红点
+                    lis[lis.current].className = "";
+                    lis.current = index;
+                }
+            }
+            var li_create = document.createElement("li")//创建结点
+            var span_current = document.createElement("span")//创建结点
+            var a_create = document.createElement("a")//创建结点
+            var img_create = document.createElement("img")//创建结点
+            a_create.appendChild(img_create);//将img_create插到a_create的最后面
+            li_create.appendChild(span_current);//将img_create插到a_create的最后面
+            span_current.style.width = "100%";
+            for (var i = 1; i <= pic_num; i++) {
+                var li_copy = li_create.cloneNode(true);
+                var a_copy = a_create.cloneNode(true);
+                setstyle(a_copy, i - 1);
+                $("#circle").appendChild(li_copy);//添加结点，放到circle的最后面
+                $(".dot")[0].appendChild(a_copy);
+                getfirstChild(a_copy).src = "images/" + i + "" + i + ".jpg";//修改img_copy的src
+                if (i == 1) {
+                    li_copy.className = "current";
+                }
+            }
+            $("#circle").style.marginLeft = (-14 * pic_num) + "px";//使得li居中
+
+            //当鼠标移动到li时切换到指定图片
+            var pics = getchildNodes($("#dot"));
+            var lis = gettag("circle", "li");//数组
+            lis.current = 0;//自定义属性，记录当前的图片所在的li位置
+            for (var i = 0, len = lis.length; i < len; i++) {
+                lis[i].index = i;//自定义属性
+                lis[i].onmouseover = function () {
+                    current_rotate(this.index, lis);//使用自定义属性，免除for循环后i总为6的干扰，可以做tab栏切换效果
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+<div class="dot" id="dot">
+</div>
+<ul class="circle" id="circle">
+</ul>
+</body>
+</html>

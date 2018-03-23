@@ -1,0 +1,389 @@
+@charset "UTF-8";
+.banner604{
+    /*相对定位占位置，不能加高，否则页面会往下移*/
+    position: relative;
+}
+.banner604  a{
+    position: absolute;
+    top: 0;
+    left: 0;
+    /*定位的东西要想充满屏幕就要width:100%*/
+    width: 100%;
+    /*绝对定位不占位置，脱标，可以加高*/
+    height: 604px;
+    background: url("../images/banner.jpg") no-repeat top center;
+}
+.main{
+    /*加定位原因：.banner604加了相对定位，权重比.main大，会压住.main，加上定位后压盖靠后*/
+    position: relative;
+}
+.scroll{
+    width: 730px;
+    height: 454px;
+    /*上右下左*/
+    margin: 11px 0 0 220px;
+    float: left;
+    position: relative;
+    overflow: hidden;
+}
+.scroll .pic_bigbox{
+    width: 10000px;
+    /*高度会被撑开的原因：.pic_bigbox a里面有图片或文字，会撑开父辈的高*/
+    /*height: 453px;*/
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.pic_bigbox a{
+    float: left;
+    display: block;
+}
+.pic_bigbox img{
+    /*清除图片底侧三像素缝隙*/
+    display: block;
+}
+.circle{
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    margin-left: -66px;
+}
+.circle li{
+    width: 24px;
+    height: 5px;
+    /*圆角矩形，50%成圆形*/
+    /*border-radius: 50%;*/
+    /*background-color: #3E3E3E;*/
+    /*float: left;*/
+    text-align: center;
+    /*line-height: 18px;*/
+    color: #fff;
+    margin: 0px 2px;
+    cursor: pointer;
+    /*表现为行内元素，和浮动一样*/
+    display: inline-block;
+    background: url(../images/icon.png) no-repeat -24px -790px;
+}
+/*.circle li.current{*/
+    /*background-position: -24px -770px;*/
+/*}*/
+.circle li span{
+    display: none;
+    height: 5px;
+}
+.circle li.current span{
+    display: block;
+    width: 0;
+    background: url(../images/icon.png) no-repeat -24px -770px;
+}
+.arrow{
+    /*隐藏*/
+    display: none;
+}
+.arrow-l,.arrow-r{
+    position: absolute;
+    width: 28px;
+    height: 62px;
+    /*若绝对定位不给left和top，则会按照标准流显示。若既有left又有right则按照left显示，若既有top又有bottom则按照top显示*/
+    top: 50%;
+    margin-top:-31px;
+    color: #fff;
+    font: 500 18px/62px "宋体";
+    text-align: center;
+    /*Opacity：0.5，让盒子半透明，但是里面的东西也会半透明;background: rgba()，a为透明度，此处.3为0.3*/
+    /*IE6半透明：filter: alpha(opacity=50)*/
+    background: rgba(0,0,0,.3);
+}
+.arrow-l{
+    left: 0;
+}
+.arrow-r{
+    right: 0;
+}
+.arrow-l:hover,.arrow-r:hover{
+    background: rgba(0,0,0,.4);
+    color: #fff;
+}
+.news{
+    width: 248px;
+    height: 451px;
+    border: 1px solid #E4E4E4;
+    float: right;
+    margin-top: 12px;
+}
+.jd-news{
+    height: 200px;
+    /*像素1，样式为虚线，颜色*/
+    border-bottom: 1px dashed #E4E4E4;
+}
+.jd-news .dt,.lifeservi .dt {
+    height: 43px;
+    /*像素1，样式为点，颜色*/
+    border-bottom: 1px dotted #E8E8E7;
+    line-height: 43px;
+}
+.jd-news .dt h3,.lifeservi .dt h3{
+    float: left;
+    /*可以不给行高和粗细度*/
+    font: 14px/43px "microsoft yahei";
+    color: #666;
+    padding-left: 15px;
+}
+.jd-news .dt a{
+    float: right;
+    font: 13px/43px "宋体";
+    margin-right: 15px;
+}
+.jd-news .dd ul{
+    padding: 8px 0 0 15px;
+}
+.jd-news .dd li{
+    line-height: 28px;
+}
+.jd-news .dd li span{
+    font-weight: 700;
+    margin-right: 5px;
+}
+.lifeservi{
+    height: 251px;
+    width: 248px;
+    /*切掉突出的部分*/
+    overflow: hidden;
+}
+.lifeservi .dd{
+    border-top: 1px dotted #E4E4E4;
+    /*切掉.lifeservi ul多出的宽，不显示；且.lifeservi .dd li有个margin-top为-1，顺便可以切掉*/
+    overflow: hidden;
+}
+.lifeservi ul{
+    /*加一个比父亲.news还大的宽，使得每一行可以容纳4个li。在小盒子里面装一个大盒子，使得里面的小项目可以全部容纳*/
+    width: 252px;
+}
+.lifeservi .dd li{
+    width: 62px;
+    height: 70px;
+    border: 1px solid #E4E4E4;
+    float: left;
+    margin: -1px 0 0 -1px;
+}
+.lifeservi .dd li a{
+    display: block;
+    height: 70px;
+    text-align: center;
+    padding-top: 44px;
+    position: relative;
+}
+.lifeservi li i{
+    position: absolute;
+    top: 12px;
+    left: 18px;
+    width: 25px;
+    height: 25px;
+    background: url("../images/icon_lifeserv.png") no-repeat right top;
+}
+.lifeservi .song{
+    background: url("../images/song.png") no-repeat right top;
+}
+
+/*双十一的某个活动开始*/
+.todays{
+    /*加定位原因：底部有定位，不加的话会被压盖*/
+    position: relative;
+}
+.night{
+    margin: 10px 0 28px 0;
+}
+.night-r{
+    width: 1000px;
+    height: 160px;
+    float: right;
+}
+.night-r ul{
+    /*500%指的是父亲宽的500%*/
+    width: 500%;
+}
+.night-r li{
+    float: left;
+    margin-right: 1px;
+}
+/*双十一的某个活动结束*/
+
+/*absolute→fix框开始*/
+.fix_box{
+    position: fixed;
+    top: 0;
+    right: 5px;
+    width: 260px;
+    /*height: 150px;*/
+    background-color: white;
+    font: 20px/20px "宋体";
+}
+.absolute_box{
+    /*position: fixed;*/
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 260px;
+    /*height: 150px;*/
+    background-color: white;
+    font: 20px/20px "宋体";
+}
+#absolute_fix_box .time{
+    width: 260px;
+    border-bottom: 1px dashed;
+}
+#absolute_fix_box #move_top,#absolute_fix_box #close_absolute_fix_box{
+    position: absolute;
+    top: 0;
+    right: 15px;
+    width: 15px;
+    height: 15px;
+    font-size: 15px;
+    cursor: pointer;
+    text-align: center;
+    line-height: 15px;
+}
+#absolute_fix_box #close_absolute_fix_box{
+    right: 0;
+}
+#absolute_fix_box .slider{
+    width: 100%;
+    height: 30px;
+    position: relative;
+    border-bottom: 1px dashed;
+}
+#absolute_fix_box .xingzuo{
+    width: 100%;
+    height: 100px;
+    background-color: white;
+    font: 20px/20px "宋体";
+    border-bottom: 1px dashed;
+}
+#absolute_fix_box .xuanze{
+    width: 100%;
+    /*height: 80px;*/
+    font: 20px/20px "宋体";
+    border-bottom: 1px dashed;
+}
+#absolute_fix_box .liuyan{
+    width: 100%;
+}
+.time p{
+    text-align: left;/*向左对齐*/
+    font: 15px/15px "宋体";
+}
+.xingzuo .icon{
+    margin: 0 20px 0 0;
+    margin-right: 20px;
+    width: 36px;
+    height: 36px;
+    float: left;
+    background: url("../images/xingzuo.gif") no-repeat -391px -132px;
+}
+.xingzuo .top_right{
+    height: 60px;
+    float: left;
+}
+.xingzuo .jrys{
+    width: 200px;
+}
+.xingzuo .title{
+    float: left;
+    font: 16px/16px "宋体";
+}
+.xingzuo .yunshi{
+    margin-left: 20px;
+    float: left;
+    width: 80px;
+    height: 16px;
+    background: url("../images/icon_star.gif") top left;
+    position: relative;
+}
+.xingzuo .star{
+    top: 0px;
+    left: 0px;
+    /*用js控制宽度，实现部分压盖效果*/
+    width: 80px;
+    height: 16px;
+    position: absolute;
+    background: url("../images/icon_star.gif") bottom left;
+}
+.xuanze button{
+    font: 18px/18px "宋体";
+    background-color: white;
+    border: 1px solid;
+    color: black;
+    margin: 10px 10px;
+    cursor: pointer;
+}
+.xuanze li{
+    float: left;
+}
+.liuyan textarea{
+    /*防止用户拖动右下角*/
+    resize: none;
+    width: 200px;
+    height: 40px;
+    font: 20px/40px "宋体";
+    float: left;
+    padding: 0px;
+}
+.liuyan .fb{
+    font: 20px/20px "宋体";
+    background-color: white;
+    border: 1px solid;
+    color: black;
+    float: right;
+    margin-top: 10px;
+    cursor: pointer;
+}
+.liuyan ul{
+    list-style: none;
+    float: left;
+}
+.liuyan li{
+    width: 200px;
+    height: 15px;
+    font: 15px/15px "宋体";
+    border-bottom:1px dashed #ccc;
+    margin-left: 1px;
+}
+.liuyan li a{
+    float: right;
+    text-decoration: underline;
+    color: blue;
+}
+.slider .sliderbar{
+    height: 10px;
+    width: 100%;
+    background-color: black;
+    position: absolute;
+    left: 0;
+    top: 10px;
+}
+.sliderbar .bar{
+    height: 20px;
+    width: 10px;
+    background-color: blue;
+    position: absolute;
+    left: 0;
+    top: -5px;
+    cursor: move;
+}
+.sliderbar .mask{
+    width: 0;
+    height: 10px;
+    background-color: blue;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+/*absolute→fix框结束/
+/*广告栏开始*/
+.advertisement{
+    position: absolute;
+    left: 0;
+    top: 50px;
+    z-index: 999;
+}
+/*广告栏结束*/
