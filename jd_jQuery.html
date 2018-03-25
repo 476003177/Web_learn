@@ -3,285 +3,277 @@
 <head>
     <meta charset="UTF-8">
     <title>京东网页练习</title>
-    <!--css写法分三种：1、行内式，直接在页面中写，只影响一行；2、内嵌式，即在此处直接写；3、外链式，即下文-->
-    <!--引入css，外链式-->
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/index.css">
-    <!--引入图标，一般放在根目录-->
     <link rel="shortcut icon" href="favicon.ico">
-    <!--<style>内嵌式CSS</style>-->
-    <!--外链式js，自定义常用的js-->
-    <script src="js/my.js" type="text/javascript"></script>
-    <!--内嵌式js-->
-    <script type="text/javascript">
-        //入口函数，一个文件只能写一次
-        //作用：页面元素和样式加载完后才加载此函数内的js
-        //好处：使得里面的js可以写在任何的地方，不拘束于元素位置
-        //缺点：页面元素和样式加载完后，里面的js才生效，若网速较差则时效性不足
-        window.onload=function(){
-            //写js
-            //用js控制结点的方式控制中间的大模块，即#circle li
-            var li_num=6;
-            var li_create=document.createElement("li")//创建结点
-            var span_current=document.createElement("span")//创建结点
-            var a_create=document.createElement("a")//创建结点
-            var img_create=document.createElement("img")//创建结点
+    <script src="jQuery/jquery-1.11.1.js"></script>
+    <script>
+        //层级选择器：
+        //空格：jQuery后代选择器（选择所有的后代元素）
+        //>：jQuery子代选择器（选择所有的子代元素）
+        //+：jQuery紧邻选择器（选择紧挨着的下一个元素）
+        //~：jQuery兄弟选择器（选择后面的所有的兄弟元素）
+        //过滤选择器：
+        //:eq(index)：index是从0开始的一个数字，选择序号为index的元素
+        //:gt(index)：选择序号大于index的元素
+        //:lt(index)：选择小于index 的元素
+        //:odd(index)：选择所有序号为奇数行的元素
+        //:even(index)：选择所有序号为偶数的元素（包括0）
+        //:first(index)：选择匹配第一个元素
+        //:last(index)：选择匹配的最后一个元素
+        //属性选择器：
+        //$(“a[href]”)：选择所有包含href属性的元素
+        //$(“a[href=’itcast’]”)：选择href属性值为itcast的所有a标签
+        //$(“a[href!=’baidu’]”)：选择所有href属性不等baidu的所有元素，包括没有href的元素
+        //$(“a[href^=’web’]”)：选择所有href以web开头的元素
+        //$(“a[href$=’cn’]”)：选择所有href以cn结尾的元素
+        //$(“a[href*=’i’]”)：选择所有href包含i这个字符的元素，可以是中英文
+        //$(“a[href][title=’我’]”)：选择所有符合指定属性规则的元素，都符合才会被选中（交集）
+        //筛选选择器：
+        //.eq()：类比 ":eq(index)" 选择器
+        //.first()：类比 ":first" 选择器
+        //.parent("#div")：选择符合“#div”的父亲元素
+        //.siblings(".liItem")：选择所有符合“.liItem”的兄弟元素
+        //.find("#li04")：查找所有符合“#li04”后代元素
+
+        // 1. 入口函数的方式
+        $(document).ready(function () {
+
+        });
+        // 2. 入口函数的方式
+        $(function () {
+            var li_num = 6;
+            var li_create = document.createElement("li")//创建结点
+            var span_current = document.createElement("span")//创建结点
+            var a_create = document.createElement("a")//创建结点
+            var img_create = document.createElement("img")//创建结点
             a_create.appendChild(img_create);//将img_create插到a_create的最后面
             li_create.appendChild(span_current);//将img_create插到a_create的最后面
-            span_current.style.width="100%";
-//            $("#circle").removeChild(li_create);//移除结点
-            for(var i=1;i<=li_num;i++){
-//            cloneNode(true/false)：克隆结点，参数true为深度克隆（子节点也会克隆），false为浅度克隆（只克隆该结点）
-                var li_copy=li_create.cloneNode(true);
-                var a_copy=a_create.cloneNode(true);
-//            insertBefore(结点，参照结点)：插入结点，把li_create插入到circle的最后一个孩子之前，若第二个参数为null则默认放到最后
-//            结点1.appendChild(结点2)：将结点2添加结点1的最后面
-//                $("#circle").insertBefore(li_copy,getlastChild($("#circle")));
-                $("#circle").appendChild(li_copy);//添加结点，放到circle的最后面
+            span_current.style.width = "100%";
+            for (var i = 1; i <= li_num; i++) {
+                var li_copy = li_create.cloneNode(true);
+                var a_copy = a_create.cloneNode(true);
+                //jQuery对象转换成DOM对象:方式一：$(“#btn”)[0]；方式二：$(“#btn”).get(0)
+                //DOM对象转换成jQuery对象：$(object)
+                $("#circle")[0].appendChild(li_copy);//添加结点，放到circle的最后面
                 $(".pic_bigbox")[0].appendChild(a_copy);
-                getfirstChild(a_copy).src="images/"+i+""+i+".jpg";//修改img_copy的src
-//                li_copy.innerHTML=i;
-                if(i==1){
-                    li_copy.className="current";
+                $(a_copy).find("img")[0].src = "images/" + i + "" + i + ".jpg"
+                if (i == 1) {
+                    li_copy.className = "current";
                 }
-//                li_copy.setAttribute("class","");//setAttribute：更改属性内容（属性，值）
-//                li_copy.removeAttribute("class");//removeAttribute：删除节点属性
-//                console.log(li_copy.getAttribute("class"));//getAttribute：获取结点的属性
             }
-            //利用style只能得到行列样式带的属性，且返回带单位，要得到css里的属性要用offset，该方法只读，且不带单位
-            //offsetWidth =  width  + border  +  padding，返回当前元素生效的width，不带单位
-                //clientWidth =  width  +  padding，不含border；client意为可视区域
-                //scrollWidth：大小为内容大小，会被撑开
-            //offsetLeft：子盒子到定位的父盒子边框到边框的距离
-            //offsetParent：返回带定位的父辈
-            $(".pic_bigbox")[0].style.width=$("#scroll").offsetWidth*li_num+"px";//调整pic大盒子的宽度
-            $(".pic_bigbox")[0].style["left"]=0;//设置大盒子初始位置，[]写法的好处：可以参数传递
-            $("#circle").style.marginLeft=(-14*li_num)+"px";//使得li居中
+            //css（style,value）：修改属性
+            $(".pic_bigbox").css("width",$("#scroll")[0].offsetWidth * li_num + "px");//调整pic大盒子的宽度
+            $(".pic_bigbox").css("left",0);
+            $("#circle").css("margin-left",(-14 * li_num) + "px");//使得li居中
 
             //中部轮播图交互
             //当鼠标移动到li时暂停自动切换图片并切换到指定图片，鼠标移开时恢复自动切换
-            var pic_bigbox=$("#pic_bigbox");
-            var lis=gettag("scroll","li");//数组
-            lis.current=0;//自定义属性，记录当前的图片所在的li位置
-            for(var i= 0,len=lis.length;i<len;i++){
-                lis[i].index=i;//自定义属性
-                lis[i].onmouseover=function(){
+            var pic_bigbox = $("#pic_bigbox")[0];
+            var lis = $("#scroll li");
+            lis.current = 0;//自定义属性，记录当前的图片所在的li位置
+            for (var i = 0, len = lis.length; i < len; i++) {
+                lis[i].index = i;//自定义属性
+                lis[i].onmouseenter = function () {
                     clearInterval(pic_bigbox.move);//停止自动切换
-//                    console.log("i为"+i);
-//                    console.log("index为"+this.index);
-                    current(this.index,lis);//使用自定义属性，免除for循环后i总为6的干扰，可以做tab栏切换效果
+                    current(this.index, lis);//使用自定义属性，免除for循环后i总为6的干扰，可以做tab栏切换效果
                 }
                 //当鼠标移出时恢复自动切换
-                lis[i].onmouseout=function(){
-                    pic_bigbox.move=setInterval(switch_pic,1500,1);
+                lis[i].onmouseleave = function () {
+                    pic_bigbox.move = setInterval(switch_pic, 1500, 1);
                 }
             }
             //函数：切换图片，index=0为向前切换，index=1为向后切换
-            function switch_pic(index){
-                var next_pic=0;
-                var current_pic=lis.current;
-                if(index==0){
-                    next_pic=(current_pic>0?current_pic-1:lis.length-1);
-                }else if(index==1){
-                    next_pic=(current_pic<lis.length-1?current_pic+1:0);
+            function switch_pic(index) {
+                var next_pic = 0;
+                var current_pic = lis.current;
+                if (index == 0) {
+                    next_pic = (current_pic > 0 ? current_pic - 1 : lis.length - 1);
+                } else if (index == 1) {
+                    next_pic = (current_pic < lis.length - 1 ? current_pic + 1 : 0);
                 }
-                current(next_pic,lis);
-                getfirstChild(lis[next_pic]).style.width=0;
-                move_slow_or_constant(getfirstChild(lis[next_pic]),{width:24},"constant",1);
+                current(next_pic, lis);
+                getfirstChild(lis[next_pic]).style.width = 0;
+                move_slow_or_constant(getfirstChild(lis[next_pic]), {"width": 24}, "constant", 1);
             }
+
             //当鼠标点击两个三角则切换图片，鼠标移动到时暂时停止自动切换，鼠标移开恢复
-            var triangles=gettag("arr","a");
-            for(var i= 0,len=triangles.length;i<len;i++){
-                triangles[i].index=i;//自定义属性
-                triangles[i].onclick=function(){
+            var triangles = $("#arr a");
+            for (var i = 0, len = triangles.length; i < len; i++) {
+                triangles[i].index = i;//自定义属性
+                triangles[i].onclick = function () {
                     clearInterval(pic_bigbox.move);//停止自动切换
                     switch_pic(this.index);
                 }
-                triangles[i].onmouseover=function(){
+                triangles[i].onmouseenter = function () {
                     clearInterval(pic_bigbox.move);//停止自动切换
                 }
-                triangles[i].onmouseout=function(){
-                    pic_bigbox.move=setInterval(switch_pic,1500,1);
+                triangles[i].onmouseleave = function () {
+                    pic_bigbox.move = setInterval(switch_pic, 1500, 1);
                 }
             }
             //限时自动切换图片
-            //setInterval（函数对象本身，间隔毫秒数，函数传递变量）。函数对象本身不能有括号（）
-            //setInterval是排队执行，排队时间为第二个变量，若执行时间大于此，打执行完后立刻执行下一个
-            pic_bigbox.move=setInterval(switch_pic,1500,1);
+            pic_bigbox.move = setInterval(switch_pic, 1500, 1);
 
             //登录
-            $("#login").onclick=function(event){
-                var event=event_conpatible(event);
-                $("#mask").style.display='block';//单引号双引号都OK，双引号内用单引号
-                $("#login_box").style.display="block";
-                document.body.style.overflow="hidden";//利用hidden隐藏滚动条
+            //click(function(){})：jQuery事件处理
+            $("#login").click(function (event) {
+//                var event = event_conpatible(event);
+                $("#mask").show();//单引号双引号都OK，双引号内用单引号
+                $("#login_box").show();
+                document.body.style.overflow = "hidden";//利用hidden隐藏滚动条
                 //禁止冒泡，原因：点击$("#login")后会触发document.onclick，显示不出登录框
-                bubble_cancel(event);
-            }
+//                bubble_cancel(event);
+            })
             //取消登录
-            $("#close_login").onclick=function(){
-                $("#mask").style.display="none";
-                $("#login_box").style.display="none";
-                document.body.style.overflow="visible";//显示回滚动条
-            }
-            //点击登录框以外的地方取消登录
-            document.onclick=function(event){
-                var event=event_conpatible(event);
-                //判断事件对象的id，target：事件被传送到的对象
-                if(event_id(event)!="login_box"){
-                    $("#mask").style.display="none";
-                    $("#login_box").style.display="none";
-                    document.body.style.overflow="visible";//显示回滚动条
-                }
-            }
+            $("#close_login").click(function () {
+                $("#mask").hide();
+                $("#login_box").hide();
+                document.body.style.overflow = "visible";//显示回滚动条
+            })
+//            //点击登录框以外的地方取消登录
+//            document.onclick = function (event) {
+//                var event = event_conpatible(event);
+//                //判断事件对象的id，target：事件被传送到的对象
+//                if (event_id(event) != "login_box") {
+//                    $("#mask").style.display = "none";
+//                    $("#login_box").style.display = "none";
+//                    document.body.style.overflow = "visible";//显示回滚动条
+//                }
+//            }
 
             //搜索框的交互
-            $("#txt").onfocus=function(){//得到焦点
-                this.style.color="#333";
-                if(this.value=="图书开抢"){
-                    this.value="";
+            $("#txt").focus(function () {//得到焦点
+                $("#txt").css("color","#333");
+                if (this.value == "图书开抢") {
+                    this.value = "";
                 }
-            }
-            $("#txt").onblur=function(){//失去焦点
-                this.style.color="#ccc";
-                if(this.value==""){
-                    this.value="图书开抢";
+            })
+            $("#txt").blur(function () {//失去焦点
+                $("#txt").css("color","#ccc");
+                if (this.value == "") {
+                    this.value = "图书开抢";
                 }
-            }
+            })
             //点击选择表单(选中表单内全部内容)，this代表调用的主体，在此处为txt
-            $("#txt").onclick=this.select;//this.select不可加()，否则只会调用一次
-            //oninput为检测输入状态，当$("#txt")为输入状态时则执行，绝大部分浏览器兼容，ie可能不兼容
-            //onpropertyChange与oninput功能一样，当oninput不兼容时可用此代替，连等方法和分别写相同
-            $("#txt").oninput=$("#txt").onpropertychange=function(){
-                if(this.value==""){
-                    $("#message").style.display="block";
-                }else{
-                    $("#message").style.display="none";
+            $("#txt").click($("#txt")[0].select);//this.select不可加()，否则只会调用一次
+            $("#txt")[0].oninput = $("#txt")[0].onpropertychange = function () {
+                if (this.value == "") {
+                    $("#message").show();
+                } else {
+                    $("#message").hide();
                 }
             }
 
             //左侧栏dropdown的交互
-            var dds=gettag("dd","div");
-            var tabs=gettag("tab_box","div");
-            dds.current=-1;
-            for(var i= 0,len=dds.length;i<len;i++){
-                dds[i].index=i;
-                tabs[i].index=i;
-                dds[i].onmouseover=function(){
-                    $("#showbox").style.width="1210px";
-                    if(dds.current!=-1)tabs[dds.current].className="";
-                    tabs[this.index].className="current";
-                    dds.current=this.index;
-                }
-                dds[i].onmouseout=function(event){
-                    var event=event_conpatible(event);
-                    //禁止冒泡
-                    //原因：dds[i].onmouseout冒泡会触发$("#showbox").onmouseout
-                    bubble_cancel(event);
-                }
+            var dds = $("#dd div");
+            var tabs = $("#tab_box div");
+            dds.current = -1;
+            for (var i = 0, len = dds.length; i < len; i++) {
+                dds[i].index = i;
+                tabs[i].index = i;
+//                dds[i].onmouseenter = function () {
+                dds[i].mouseenter(function () {
+                    $("#showbox").css("width","1210px")
+                    if (dds.current != -1)tabs[dds.current].className = "";
+                    tabs[this.index].className = "current";
+                    dds.current = this.index;
+                })
             }
             //当鼠标指向items h3和items span时，会触发，但可以禁止冒泡
-            $("#showbox").onmouseout=function(){
-                this.style.width="210px";
-                if(dds.current!=-1)tabs[dds.current].className="";
-                dds.current=-1;
-            }
+            $("#showbox").onmouseleave(function () {
+                $("#showbox").css("width","210px");
+                if (dds.current != -1)tabs[dds.current].className = "";
+                dds.current = -1;
+            })
 
             //movebox移动
-            var move_lis=gettag("move_ul","li");
-            var movebox=$(".movebox")[0];
-            var home_target=movebox.offsetLeft;
-            var home_width=movebox.offsetWidth+"px";
-            var return_target=home_target;
-            var return_width=home_width;
-            for(var i= 0,len=move_lis.length;i<len;i++){
+            var move_lis = $("#move_ul li");
+            var movebox = $(".movebox")[0];
+            var home_target = movebox.offsetLeft;
+            var home_width = movebox.offsetWidth + "px";
+            var return_target = home_target;
+            var return_width = home_width;
+            for (var i = 0, len = move_lis.length; i < len; i++) {
                 //滑动到鼠标所在的li
-                move_lis[i].onmouseover=function(){
-                    movebox.style.width=this.offsetWidth+"px";
+                move_lis[i].onmouseenter = function () {
+                    movebox.style.width = this.offsetWidth + "px";
                     //offsetLeft：子盒子到定位的父盒子边框到边框的距离
-                    var target=this.offsetLeft;
-                    move_slow_or_constant(movebox,{left:target});//缓动效果
+                    var target = this.offsetLeft;
+                    move_slow_or_constant(movebox, {"left": target});//缓动效果
                 }
                 //点击后锁定，不滑回原来的位置
-                move_lis[i].onmousedown=function(event){//event可以换成自定义，如aa，代表事件
-                    var event=event_conpatible(event);
+                move_lis[i].onmousedown = function (event) {//event可以换成自定义，如aa，代表事件
+                    var event = event_conpatible(event);
                     //screenX(Y)：鼠标基于屏幕的坐标
                     //pageX(Y)：鼠标基于文档的坐标
                     //clientX(Y)：鼠标基于可视区域的坐标
-                    if(event.button==0){//0左键,1中键，2右键
-                        return_target=this.offsetLeft;
-                        return_width=this.offsetWidth+"px";
-                    }else if(event.button==2||event.button==1) {
-                        return_target=home_target;
-                        return_width=home_width;
+                    if (event.button == 0) {//0左键,1中键，2右键
+                        return_target = this.offsetLeft;
+                        return_width = this.offsetWidth + "px";
+                    } else if (event.button == 2 || event.button == 1) {
+                        return_target = home_target;
+                        return_width = home_width;
                     }
                 }
                 //滑回原来/锁定的位置
-                move_lis[i].onmouseout=function(){
-                    move_slow_or_constant(movebox,{left:return_target});//缓动效果
+                move_lis[i].onmouseleave = function () {
+                    move_slow_or_constant(movebox, {"left": return_target});//缓动效果
                 }
             }
 
             //absolute→fix框交互+广告交互（跟随缓动）
             //absolute变向fix
-            var box_top=$("#absolute_fix_box").offsetTop;
-            var advertisement=$(".advertisement")[0];
-            var advertisement_top=advertisement.offsetTop;
+            var box_top = $("#absolute_fix_box").offsetTop;
+            var advertisement = $(".advertisement")[0];
+            var advertisement_top = advertisement.offsetTop;
             //window.onscroll：页面滚动事件；window.onresize：窗口改变事件
-            window.onscroll = function() {
+            window.onscroll = function () {
                 //把滚动的数据写在页面标题
-                var scroll_top=scroll_().top;
+                var scroll_top = scroll_().top;
                 document.title = scroll_top;
-                if(scroll_top>=box_top){
-                    $("#absolute_fix_box").className="fix_box";
-                }else{
-                    $("#absolute_fix_box").className="absolute_box";
+                if (scroll_top >= box_top) {
+                    $("#absolute_fix_box").className = "fix_box";
+                } else {
+                    $("#absolute_fix_box").className = "absolute_box";
                 }
                 //广告栏互动
                 var target = scroll_top + advertisement_top;  // 把最新的scrolltop给target
-                move_slow_or_constant(advertisement,{top:target});//缓动效果
+                move_slow_or_constant(advertisement, {"top": target});//缓动效果
             }
             //星座交互
-            var star=[10,2,3,4,5,6,7,8,9,10,3,5];//数组
-            //数组操作
-//            console.log(star);//打印数组
-//            console.log(star.push(1));//push：从后面添加数组元素，返回操作后的数组长度
-//            console.log(star.unshift(2));//unshift：从前面添加数组元素，返回操作后的数组长度
-//            console.log(star.pop());//pop：移除最后一个元素，返回操作前最后一个元素的值
-//            console.log(star.shift());//shift：删除第一个元素，返回操作前第一个元素的值
-//            console.log(star.concat(["2"]));//concat：连接数组，返回的是连接数组的副本；
-//            console.log(star.join("-"));//join：将数组按照指定分隔符转换为字符串，缺省则默认为逗号；split：分割，将字符串转换为数组
-            var xz_bottom=["白羊","金牛","双子","巨蟹","狮子","处女","天秤","天蝎","射手","魔蝎","水瓶","双鱼"];
+            var star = [10, 2, 3, 4, 5, 6, 7, 8, 9, 10, 3, 5];//数组
+            var xz_bottom = ["白羊", "金牛", "双子", "巨蟹", "狮子", "处女", "天秤", "天蝎", "射手", "魔蝎", "水瓶", "双鱼"];
             //下拉框交互，value反应在selece上，onchange为检测下拉框状态改变
-            $("#sele").onchange=function(){
-                var width=star[this.value-1]*80/10;
-                $("#star").style.width=width+"px";
-                var x=-391-(this.value-1)*36;
-                $("#xz_icon").style.backgroundPositionX=x+"px";
-                //innerHTML，改变盒子内文字
-                $("#xz_bottom").innerHTML=xz_bottom[this.value-1];
+            $("#sele")[0].onchange = function () {
+                var width = star[this.value - 1] * 80 / 10;
+                $("#star").css("width",width + "px");
+                var x = -391 - (this.value - 1) * 36;
+                $("#xz_icon").css("background-position-x",x + "px");
+                $("#xz_bottom").html(xz_bottom[this.value - 1]);
             }
             //滑动条交互
-            var slider_bar=getchildNodes($("#sliderbar"))[0];
+            var slider_bar = $("#sliderbar").first()[0];
             //拖动原理：点击→移动
-            drag(slider_bar,slider_bar);
+//            drag(slider_bar, slider_bar);
             //slider_mask填充效果
             //关闭absolute→fix框
-            $("#close_absolute_fix_box").onclick=function(){
-                $("#absolute_fix_box").style.display="none";
+            $("#close_absolute_fix_box").onclick = function () {
+                $("#absolute_fix_box").style.display = "none";
             }
             //点击△返回到页面顶端
-            var move_top=$("#move_top");
-            move_top.onclick=function(){
-                var target=0;
+            var move_top = $("#move_top");
+            $("#move_top").click(function () {
+                var target = 0;
                 //window.scrollTo(x,y)：去往页面的(x,y)
-                move_slow_or_constant(move_top,{default:target},"slow",10,function(){return {default:scroll_().top}},
-                        function(x){window.scrollTo(0,x)});
-            }
-//            $("#absolute_fix_box").style.webkitTransform="rotate(1deg)";//旋转1°
-        }
-        //写在入口函数之外，且在页面顶端，会首先执行
-
+                move_slow_or_constant(move_top, {"default": target}, "slow", 10, function () {
+                            return {default: scroll_().top}
+                        },
+                        function (x) {
+                            window.scrollTo(0, x)
+                        });
+            })
+        })
     </script>
 </head>
 <body>
@@ -355,12 +347,13 @@
 </div>
 <!--点击X取消topbanner-->
 <script>
-//    事件源：a    事件：点击    事件处理程序：隐藏topbanner
-//    display：none隐藏不占位置，其他元素填充；visibility：hidden隐藏占位置
+    //    事件源：a    事件：点击    事件处理程序：隐藏topbanner
+    //    display：none隐藏不占位置，其他元素填充；visibility：hidden隐藏占位置
     var jd_close=$("#jd_close");//得到a，getElementById快捷键：geti<TAB>
     var topBanner=$("#top_banner");
-//    事件源.事件=function(){}，onclick为点击，onmouseover为鼠标放在元素上面，onmouseout为鼠标不放在元素上面
-    jd_close.onclick=function(){
+    //    事件源.事件=function(){}，onclick为点击，onmouseover为鼠标放在元素上面，onmouseout为鼠标不放在元素上面
+    //    onmouseenter/mouseleave和onmouseover/onmouseout区别：后者经过子元素时会触发，前者经过子元素不会触发
+    jd_close.onmouseenter=function(){
 //        设置topBanner的样式，使其不显示
         topBanner.style.display="none";
     }
@@ -419,7 +412,7 @@
     <div class="w">
         <div class="dropdown">
             <div class="dt">
-                    <a href="#">全部商品分类</a>
+                <a href="#">全部商品分类</a>
             </div>
             <div class="showbox clearfix" id="showbox">
                 <div class="dd" id="dd">
@@ -530,22 +523,8 @@
 </div>
 <div class="w main clearfix">
     <div class="scroll" id="scroll">
-        <div class="pic_bigbox" id="pic_bigbox">
-            <!--<a href="#"><img src="images/11.jpg" alt=""></a>-->
-            <!--<a href="#"><img src="images/22.jpg" alt=""></a>-->
-            <!--<a href="#"><img src="images/33.jpg" alt=""></a>-->
-            <!--<a href="#"><img src="images/44.jpg" alt=""></a>-->
-            <!--<a href="#"><img src="images/55.jpg" alt=""></a>-->
-            <!--<a href="#"><img src="images/66.jpg" alt=""></a>-->
-        </div>
-        <ul class="circle" id="circle">
-            <!--<li class="current">1</li>-->
-            <!--<li>2</li>-->
-            <!--<li>3</li>-->
-            <!--<li>4</li>-->
-            <!--<li>5</li>-->
-            <!--<li>6</li>-->
-        </ul>
+        <div class="pic_bigbox" id="pic_bigbox"></div>
+        <ul class="circle" id="circle"></ul>
         <!--左右两个三角-->
         <div class="arrow" id="arr">
             <!--onclick=triangle(this.id)为行内式Js，当鼠标点击该元素的时候，运行triangle(this.id)函数-->
@@ -557,10 +536,10 @@
         //鼠标在图片上面则显示两个三角
         var arr_triangle=$("#arr");
         var scroll=$("#scroll");
-        scroll.onmouseover= function(){
+        scroll.onmouseenter= function(){
             arr_triangle.style.display="block";//显示
         }
-        scroll.onmouseout= function () {
+        scroll.onmouseleave= function () {
             arr_triangle.style.display="none";//隐藏
         }
     </script>
@@ -662,7 +641,7 @@
                 <!--用js设置各个li中i的背景图-->
                 <script>
                     //先获取id，再获取里面的i
-                    var is=$("#iconsprite").getElementsByTagName("i");
+                    var is=$("#iconsprite i");
                     for(var i= 0,len=is.length;i<len;i++){
 //                        is.index=i;//自定义属性
                         is[i].style.backgroundPosition="-25px "+(-25*i)+"px";
@@ -865,7 +844,7 @@
     <script>
         //时间
         var arr = ["星期日","星期一","星期二","星期三","星期四","星期五","星期六"];
-        var time=$("#time").getElementsByTagName("p")[0];
+        var time=$("#time p")[0];
         //getMonth：获得当前月份（0-11），0为1月；getDay：获得当前星期几（0-6），0为星期日；getTime：获取1972年至今的毫秒数
         function update_time(){
             var date=new Date();//声明日期对象
@@ -880,9 +859,9 @@
         //和setInterval区别：要实现自动循环则需要递归，且是延时执行而非排队执行
         setTimeout(update_time,1000);
         //全选和取消
-        var btns=$("#xuanze").getElementsByTagName("button");
-        var inputs=$("#xuanze").getElementsByTagName("input");
-//        btns[0].disabled=true;//使按钮失效
+        var btns=$("#xuanze button");
+        var inputs=$("#xuanze input");
+        //        btns[0].disabled=true;//使按钮失效
         function all(flag){
             for(var i= 0,len=inputs.length;i<len;i++){
                 inputs[i].checked=flag;//checked：选项状态（“√”和没“√”）
@@ -902,9 +881,9 @@
         }
 
         //留言板
-        var txt=$("#liuyan").getElementsByTagName("textarea")[0];
-        var fbbtn=$("#liuyan").getElementsByTagName("button")[0];
-        var ul_fb=$("#liuyan").getElementsByTagName("ul")[0];
+        var txt=$("#liuyan textarea")[0];
+        var fbbtn=$("#liuyan button")[0];
+        var ul_fb=$("#liuyan ul")[0];
         txt.value="请输入";
         fbbtn.onclick=function(){
             if(txt.value!=""&&txt.value!="请输入"){
