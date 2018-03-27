@@ -34,9 +34,16 @@
             //筛选选择器：
                 //.eq()：类比 ":eq(index)" 选择器；与.get(i)区别：.eq()得到的是jQuery对象，.get(i)得到DOM对象
                 //.first()：类比 ":first" 选择器
-                //.parent("#div")：选择符合“#div”的父亲元素
-                //.siblings(".liItem")：选择所有符合“.liItem”的兄弟元素
-                //.find("#li04")：查找所有符合“#li04”后代元素
+                //.parent("#div")：选择符合匹配条件的父亲元素，如匹配"#div"
+                //.parents("#div")：选择符合匹配条件的祖先元素，如匹配"#div"
+                //.siblings(".liItem")：选择所有符合匹配条件的的兄弟元素，如匹配".liItem"
+                //.next(".liItem")：选择指定元素中匹配条件的后面兄弟元素，如匹配".liItem"
+                //.find("#li04")：选择所有符合匹配条件的后代元素，如匹配"#li04"
+                //.children("div")：选择指定元素中匹配条件的所有子元素，如匹配"div"
+                //.each(fn)：对指定元素中的每一个都执行fn操作。
+                    //fn(index,ele)：
+                        //index：当前执行元素jQuery的index值
+                        //ele：指向当前执行元素，ele==this，$(ele)!=$(this)，因为两者DOM指向一样，但jQuery内存空间不同
         //属性操作
             //css属性样式操作方法：
                 //.css（"style"）：获得style样式的值，返回该值
@@ -112,28 +119,25 @@
         //jQuery与js入口函数区别：jQuery入口函数可写多个，但js入口函数只可一个
         $(function () {
             var li_num = 6;
-            var li_create = document.createElement("li");//创建结点
-            var span_current = document.createElement("span");//创建结点
-            var a_create = document.createElement("a");//创建结点
-            var img_create = document.createElement("img");//创建结点
-            $(a_create).append($(img_create));//将img_create插到a_create的最后面
-            $(li_create).append($(span_current));//将img_create插到a_create的最后面
-            $(span_current).css("width","100%");
-            for (var i = 1; i <= li_num; i++) {
+            var li_create = $("#circle")//创建结点
+                    .css("margin-left",(-14 * li_num) + "px")//使得li居中
+                    .html("<li><span></span></li>")//创建结点
+                    .children("li");//让li_create指向li
+            li_create.children("span").css("width","100%");
+            var a_create = $(".pic_bigbox").html("<a><img></a>").children("a");//创建结点
+            for (var i = 1; i < li_num; i++) {
                 //jQuery对象转换成DOM对象:方式一：$(“#btn”)[0]；方式二：$(“#btn”).get(0)
                 //DOM对象转换成jQuery对象：$(object)
-                var li_copy = $(li_create).clone(true);
-                var a_copy = $(a_create).clone(true);
-                $("#circle").append(li_copy);//添加结点，放到circle的最后面
-                $(".pic_bigbox").append(a_copy);
-                $(a_copy).find("img")[0].src = "images/" + i + "" + i + ".jpg"
+                $("#circle").append($(li_create).clone(true));//添加结点，放到circle的最后面
+                $(".pic_bigbox").append($(a_create).clone(true))
             }
             $("#circle li").eq(0).addClass("current");
             $(".pic_bigbox").css({
                 "width":parseInt($("#scroll").css("width"))* li_num + "px",
                 "left":0
-            });
-            $("#circle").css("margin-left",(-14 * li_num) + "px");//使得li居中
+            }).find("img").each(function(index,ele){
+                $(this).attr("src","images/" + (index+1) + "" + (index+1) + ".jpg")
+            })
 
             //中部轮播图交互
             //当鼠标移动到li时暂停自动切换图片并切换到指定图片，鼠标移开时恢复自动切换
@@ -675,11 +679,11 @@
                 </ul>
                 <!--用js设置各个li中i的背景图-->
                 <script>
-                    //先获取id，再获取里面的i
-                    var is=$("#iconsprite i");
-                    for(var i= 0,len=is.length;i<len;i++){
-                        is.eq(i).css("background-position","-25px "+(-25*i)+"px");
-                    }
+                    //获取每个i分别执行
+                    $("#iconsprite i").each(function(index,ele){
+                        //index默认为jQuery的index；ele指向当前执行元素，ele==this，$(ele)!=$(this)
+                        $(this).css("background-position","-25px "+(-25*index)+"px");
+                    })
                 </script>
             </div>
         </div>
@@ -919,17 +923,17 @@
                 var li_fb=document.createElement("li");
                 // 把表单的值给li，并嵌入超链接
                 $(li_fb).html(txt.val()+"<a href ='javascript:;'>删除</a>");
-                if(ul_fb.find("li")){
+                if(ul_fb.children("li")){
                     ul_fb.prepend(li_fb);//后发布的前置
                 }else{
                     ul_fb.append($(li_fb));
                 }
                 txt.val("");
-                var delete_a=li_fb.getElementsByTagName("a")[0];
+                var delete_a=$(li_fb).children("a");
                 //点击删除超链接后删除
-                delete_a.onclick=function(){
+                delete_a.click(function(){
                     $(this).parent().remove();//删除父亲结点，即li_fb
-                }
+                })
             }
         })
     </script>
