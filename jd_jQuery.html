@@ -37,17 +37,48 @@
                 //.parent("#div")：选择符合“#div”的父亲元素
                 //.siblings(".liItem")：选择所有符合“.liItem”的兄弟元素
                 //.find("#li04")：查找所有符合“#li04”后代元素
-        //样式操作
-            //.css()属性样式操作方法：
-                //css（"style"）：获得style样式的值，返回该值
-                //css（"style",value）：修改style样式值为value
-                //css({"style1":value,"stylen":value})：修改对应的属性，可单/双引号或不加，加引号可声明不合法变量
+        //属性操作
+            //css属性样式操作方法：
+                //.css（"style"）：获得style样式的值，返回该值
+                //.css（"style",value）：修改style样式值为value
+                //.css({"style1":value,"stylen":value})：修改对应的属性，可单/双引号或不加，加引号可声明不合法变量
             //类样式操作方法：
                 //.hasClass("classname")：判断指定元素有无classname类样式，返回false（无）和true（有）
                 //.addClass("classname")：添加指定元素classname类样式
                 //.removeClass("classname")：删除指定元素的classname类样式，若参数为空则清除所有类样式
                 //.toggleClass("classname")：切换类样式，结合.addClass("classname")和.removeClass("classname")，有无切换
-
+            //DOM属性和值操作方法：
+                //.attr("style")：获得指定元素的DOM属性值，如input框的"title"
+                //.attr("style","value")：设置指定元素的DOM属性值为value
+                //.removeAttr("style","value")：移除指定元素的DOM属性
+                //.val()：获取指定元素的value值，如获取文本框的value
+                //.val("value")：设置指定元素的value值
+                //.html()：获取指定元素的html值，包括子元素标签和文本内容
+                //.html("value")：设置指定元素的html值。动态创建元素技巧：在value中写入元素，如"<p>这是p元素</p>"
+                //.text()：包括指定元素的text值，即html内文本内容，不包括子元素标签
+                //.text("value")：设置指定元素的text值
+        //节点操作
+            //内部插入节点：
+                //.append(node)：往后追加子节点，将node节点放到指定节点里的最后，如：.append("<p>p元素</p>")
+                //.appendTo(node)：往后追加子节点，将指定节点放到node节点里的最后
+                //.prepend(node)：往前添加子节点，将node节点放到指定节点里的最前面
+                //.prependTo(node)：往前添加子节点，将指定节点放到node节点里的最前面
+             //外部插入节点：
+                //.after(node)：往后添加兄弟节点，将node节点放到指定节点的后一位
+                //.insertafter(node)：往前添加兄弟节点，将指定节点放到node节点的后一位
+                //.before(node)：往前添加兄弟节点，将node节点放到指定节点的前一位
+                //.insertbefore(node)：往前添加兄弟节点，将指定节点放到node节点的前一位
+             //删除节点：
+                //.remove()：删除指定节点，可以自杀
+                //.empty()：删除指定节点的所有子节点，不会自杀
+                //.html("")：同上，可巧妙使用达到添加删除节点等效果，推荐使用，更高效
+            //复制节点：
+                //.clone(boolean):若boolean为true则深复制（绑定事件也会复制），否则为浅复制
+            //包裹节点：
+                //.wrap(node)：用node节点包裹指定节点，分别执行，效果为每个指定节点外都有node包裹着
+                //.wrapAll(node)：用node节点包裹全部指定节点，执行一次，效果为所有指定节点外只有包裹一层node
+            //替换节点：
+                //.replaceWith(node)：用node节点替换指定节点
         //动画效果
             //.show([speed],[fn]):以speed速度显示，完毕后执行fn函数
                 //speed：动画执行时长，单位为毫秒，可以是Number和String，有三种预定："slow"、"normal"、"fast"
@@ -81,25 +112,23 @@
         //jQuery与js入口函数区别：jQuery入口函数可写多个，但js入口函数只可一个
         $(function () {
             var li_num = 6;
-            var li_create = document.createElement("li")//创建结点
-            var span_current = document.createElement("span")//创建结点
-            var a_create = document.createElement("a")//创建结点
-            var img_create = document.createElement("img")//创建结点
-            a_create.appendChild(img_create);//将img_create插到a_create的最后面
-            li_create.appendChild(span_current);//将img_create插到a_create的最后面
+            var li_create = document.createElement("li");//创建结点
+            var span_current = document.createElement("span");//创建结点
+            var a_create = document.createElement("a");//创建结点
+            var img_create = document.createElement("img");//创建结点
+            $(a_create).append($(img_create));//将img_create插到a_create的最后面
+            $(li_create).append($(span_current));//将img_create插到a_create的最后面
             $(span_current).css("width","100%");
             for (var i = 1; i <= li_num; i++) {
-                var li_copy = li_create.cloneNode(true);
-                var a_copy = a_create.cloneNode(true);
                 //jQuery对象转换成DOM对象:方式一：$(“#btn”)[0]；方式二：$(“#btn”).get(0)
                 //DOM对象转换成jQuery对象：$(object)
-                $("#circle")[0].appendChild(li_copy);//添加结点，放到circle的最后面
-                $(".pic_bigbox")[0].appendChild(a_copy);
+                var li_copy = $(li_create).clone(true);
+                var a_copy = $(a_create).clone(true);
+                $("#circle").append(li_copy);//添加结点，放到circle的最后面
+                $(".pic_bigbox").append(a_copy);
                 $(a_copy).find("img")[0].src = "images/" + i + "" + i + ".jpg"
-                if (i == 1) {
-                    $(li_copy).addClass("current");
-                }
             }
+            $("#circle li").eq(0).addClass("current");
             $(".pic_bigbox").css({
                 "width":parseInt($("#scroll").css("width"))* li_num + "px",
                 "left":0
@@ -108,20 +137,12 @@
 
             //中部轮播图交互
             //当鼠标移动到li时暂停自动切换图片并切换到指定图片，鼠标移开时恢复自动切换
-            var pic_bigbox = $("#pic_bigbox")[0];
-            var lis = $("#scroll li");
-            lis.current = 0;//自定义属性，记录当前的图片所在的li位置
-            for (var i = 0, len = lis.length; i < len; i++) {
-                var lis_i=lis.eq(i);
-                lis_i.index = i;//自定义属性
-                //objectjon.function1().function2().function3():链式编程
-                lis_i.mouseenter(function () {
+            $("#scroll li").mouseenter(function(){//若$对象有多个，jQuery自动迭代
 //                    clearInterval(pic_bigbox.move);//停止自动切换
-//                    current(this.index, lis);//使用自定义属性，免除for循环后i总为6的干扰，可以做tab栏切换效果
-                }).mouseleave(function () {//当鼠标移出时恢复自动切换
+//                    current($(this).index(), lis);//使用自定义属性，免除for循环后i总为6的干扰，可以做tab栏切换效果
+            }).mouseleave(function () {//当鼠标移出时恢复自动切换
 //                    pic_bigbox.move = setInterval(switch_pic, 1500, 1);
-                })
-            }
+            })
             //函数：切换图片，index=0为向前切换，index=1为向后切换
             function switch_pic(index) {
                 var next_pic = 0;
@@ -137,19 +158,14 @@
             }
 
             //当鼠标点击两个三角则切换图片，鼠标移动到时暂时停止自动切换，鼠标移开恢复
-            var triangles = $("#arr a");
-            for (var i = 0, len = triangles.length; i < len; i++) {
-                var triangles_i=triangles.eq(i);
-                triangles_i.index = i;//自定义属性
-                triangles_i.click(function () {
+            $("#arr a").click(function(){
 //                    clearInterval(pic_bigbox.move);//停止自动切换
 //                    switch_pic(this.index);
-                }).mouseenter(function () {
+            }).mouseenter(function () {
 //                    clearInterval(pic_bigbox.move);//停止自动切换
-                }).mouseleave(function () {
+            }).mouseleave(function () {
 //                    pic_bigbox.move = setInterval(switch_pic, 1500, 1);
-                })
-            }
+            })
             //限时自动切换图片
 //            pic_bigbox.move = setInterval(switch_pic, 1500, 1);
 
@@ -184,86 +200,66 @@
             $("#txt").focus(function () {//得到焦点
                 //直接用this获取到的是DOM对象，若要进行jQuery操作需把this转换为jQuery对象,则$(this)
                 $(this).css("color","#333");
-                if (this.value == "图书开抢") {
-                    this.value = "";
-                }
-            })
-            $("#txt").blur(function () {//失去焦点
+                $(this).val()=="图书开抢"?$(this).val(""):false;
+            }).blur(function () {//失去焦点
                 $(this).css("color","#ccc");
-                if (this.value == "") {
-                    this.value = "图书开抢";
-                }
+                $(this).val()==""?$(this).val("图书开抢"):false;
             })
             //点击选择表单(选中表单内全部内容)，this代表调用的主体，在此处为txt
             $("#txt").click($("#txt")[0].select);//this.select不可加()，否则只会调用一次
             $("#txt")[0].oninput = $("#txt")[0].onpropertychange = function () {
-                if (this.value == "") {
-                    $("#message").show();
-                } else {
-                    $("#message").hide();
-                }
+                $(this).val()==""?$("#message").show():$("#message").hide();
             }
 
             //左侧栏dropdown的交互
-            var dds = $("#dd div");
-            var tabs = $("#tab_box div");
-            dds.current = -1;
-            for (var i = 0, len = dds.length; i < len; i++) {
-                var dds_i=dds.eq(i);
-                var tabs_i=tabs.eq(i);
-                dds_i[0].index=i;
-                tabs_i[0].index = i;
-                dds_i.mouseenter(function () {
-                    $("#showbox").css("width","1210px")
-                    if (dds.current != -1)tabs.eq(dds.current).removeClass("current");
-                    tabs.eq(this.index).addClass("current");
-                    dds.current = this.index;
-                })
-            }
+            $("#dd div").mouseenter(function(){
+                $("#showbox").css("width","1210px")
+                //.index()：获得元素的index，jQuery内置
+                $("#tab_box div:eq("+$(this).index()+")")
+//                        .eq($(this).index())
+                        .addClass("current")
+                        .siblings()
+                        .removeClass("current")//链式编程
+            })
             //当鼠标指向items h3和items span时，会触发，但可以禁止冒泡
             $("#showbox").mouseleave(function () {
                 $(this).css("width","210px");
-                if (dds.current != -1)tabs.eq(dds.current).removeClass("current");
-                dds.current = -1;
+                $("#tab_box div").removeClass("current")
             })
 
             //movebox移动
-            var move_lis = $("#move_ul li");
-            var movebox = $(".movebox");
-            var home_target = parseInt(movebox.css("left"));
-            var home_width = movebox.css("width");
+            var home_target = parseInt($(".movebox").css("left"));
+            var home_width = $(".movebox").css("width");
             var return_target = home_target;
             var return_width = home_width;
-            for (var i = 0, len = move_lis.length; i < len; i++) {
-                //滑动到鼠标所在的li
-                move_lis.eq(i).mouseenter(function () {
-                    movebox.stop(true,false).animate({
-                        "left":this.offsetLeft,
-                        "width":$(this).css("width")
-                    },300);
-                })
-                //点击后锁定，不滑回原来的位置
-                move_lis.eq(i).mousedown(function (event) {//event可以换成自定义，如aa，代表事件
-                    var event = event_conpatible(event);
-                    //screenX(Y)：鼠标基于屏幕的坐标
-                    //pageX(Y)：鼠标基于文档的坐标
-                    //clientX(Y)：鼠标基于可视区域的坐标
-                    if (event.button == 0) {//0左键,1中键，2右键
-                        return_target = parseInt($(this).css("left"));
-                        return_width = $(this).css("width");
-                    } else if (event.button == 2 || event.button == 1) {
-                        return_target = home_target;
-                        return_width = home_width;
-                    }
-                })
-                //滑回原来/锁定的位置
-                move_lis.eq(i).mouseleave(function () {
-                    movebox.stop(true,false).animate({
-                        "left":return_target,
-                        "width":return_width
-                    },300);
-                })
-            }
+            //滑动到鼠标所在的li
+            $("#move_ul li").mouseenter(function () {
+                $(".movebox").stop(true,false).animate({
+                    "left":this.offsetLeft,
+                    "width":$(this).css("width")
+                },300);
+            })
+            //点击后锁定，不滑回原来的位置
+            $("#move_ul li").mousedown(function (event) {//event可以换成自定义，如aa，代表事件
+                var event = event_conpatible(event);
+                //screenX(Y)：鼠标基于屏幕的坐标
+                //pageX(Y)：鼠标基于文档的坐标
+                //clientX(Y)：鼠标基于可视区域的坐标
+                if (event.button == 0) {//0左键,1中键，2右键
+                    return_target = parseInt($(this).css("left"));
+                    return_width = $(this).css("width");
+                } else if (event.button == 2 || event.button == 1) {
+                    return_target = home_target;
+                    return_width = home_width;
+                }
+            })
+            //滑回原来/锁定的位置
+            $("#move_ul li").mouseleave(function () {
+                $(".movebox").stop(true,false).animate({
+                    "left":return_target,
+                    "width":return_width
+                },300);
+            })
 
             //absolute→fix框交互+广告交互（跟随缓动）
             //absolute变向fix
@@ -293,12 +289,12 @@
             var xz_bottom = ["白羊", "金牛", "双子", "巨蟹", "狮子", "处女", "天秤", "天蝎", "射手", "魔蝎", "水瓶", "双鱼"];
             //下拉框交互，value反应在selece上，onchange为检测下拉框状态改变
             $("#sele").change(function () {
-                var width = star[this.value - 1] * 80 / 10;
+                var width = star[$(this).val()- 1] * 80 / 10;
                 $("#star").css("width",width + "px");
-                var x = -391 - (this.value - 1) * 36;
+                var x = -391 - ($(this).val()- 1) * 36;
                 $("#xz_icon").css("background-position-x",x + "px");
                 //修改innerhtml
-                $("#xz_bottom").html(xz_bottom[this.value - 1]);
+                $("#xz_bottom").html(xz_bottom[$(this).val()- 1]);
             })
             //滑动条交互
             var slider_bar = $("#sliderbar").first()[0];
@@ -682,7 +678,6 @@
                     //先获取id，再获取里面的i
                     var is=$("#iconsprite i");
                     for(var i= 0,len=is.length;i<len;i++){
-//                        is.index=i;//自定义属性
                         is.eq(i).css("background-position","-25px "+(-25*i)+"px");
                     }
                 </script>
@@ -900,38 +895,40 @@
         }
         //onclick：按钮点击
         $("#xuanze button").eq(0).click(function(){
+            $(this).attr("title","全选");
             all(true);
         })
         $("#xuanze button").eq(1).click(function(){
+            $(this).attr("title","取消");
             all(false);
         })
         $("#xuanze button").eq(2).click(function(){
+            $(this).attr("title","反选");
             for(var i= 0,len=inputs.length;i<len;i++){
                 inputs[i].checked=!(inputs[i].checked);
             }
         })
 
         //留言板
-        var txt=$("#liuyan textarea")[0];
+        var txt=$("#liuyan textarea");
 //        var fbbtn=$("#liuyan button");
-        var ul_fb=$("#liuyan ul")[0];
-        txt.value="请输入";
+        var ul_fb=$("#liuyan ul");
+        txt.val("请输入");
         $("#liuyan button").click(function(){
-            if(txt.value!=""&&txt.value!="请输入"){
+            if(txt.val()!=""&&txt.val()!="请输入"){
                 var li_fb=document.createElement("li");
                 // 把表单的值给li，并嵌入超链接
-                li_fb.innerHTML=txt.value+"<a href ='javascript:;'>删除</a>";
-                if(ul_fb.children.length==0){
-                    ul_fb.appendChild(li_fb);
+                $(li_fb).html(txt.val()+"<a href ='javascript:;'>删除</a>");
+                if(ul_fb.find("li")){
+                    ul_fb.prepend(li_fb);//后发布的前置
                 }else{
-                    ul_fb.insertBefore(li_fb,ul_fb.children[0]);//后发布的前置
+                    ul_fb.append($(li_fb));
                 }
-                txt.value="";
+                txt.val("");
                 var delete_a=li_fb.getElementsByTagName("a")[0];
                 //点击删除超链接后删除
                 delete_a.onclick=function(){
-                    ul_fb.removeChild(this.parentNode);//删除父亲结点，即li_fb
-//                    ul_fb.removeChild(li_fb);
+                    $(this).parent().remove();//删除父亲结点，即li_fb
                 }
             }
         })
