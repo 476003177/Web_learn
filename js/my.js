@@ -177,7 +177,6 @@ function update_opacity(obj,opacity_now){
 //封装一般匀动(缓动)效果
 function move_slow_or_constant(move_obj,parameter_target,move_mode,step,fn_current,fn_go){
     //parameter_target为json格式
-    console.log(parameter_target)
     var move_mode = arguments[2] ? arguments[2] : "slow";//设置第3个参数的默认值为slow，即缓动
     var step = arguments[3] ? arguments[3] : 10;//设置第4个参数的默认值为10
     clearInterval(move_obj.move);
