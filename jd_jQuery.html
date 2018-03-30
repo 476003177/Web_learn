@@ -6,9 +6,17 @@
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/index.css">
     <link rel="shortcut icon" href="favicon.ico">
-    <script src="jQuery/jquery-1.11.1.js"></script>
+    <!--jquery的min包是压缩包，一般开发用正常包，发布用压缩包-->
+    <script src="jQuery/jquery-1.11.1.js" type="text/javascript"></script>
+    <!--引入第三方jQuery插件包-->
+    <!--jQueryUI使用方法：引入jQuery→引入QueryUI的js→引入QueryUI的css→跟着demo写http://www.jqueryui.org.cn/-->
+    <script src="jQuery/jquery.color.js" type="text/javascript"></script>
+    <script src="jQuery/jquery.lazyload.js" type="text/javascript"></script>
     <script>
         //api查询：https://api.jquery.com/
+        //$操作
+            //$是jQuery自定义默认的算法符号，若用户自定义使得污染后，可用$.noConflict()恢复$的使用
+            //$(ele)：获得指定元素并转换为jQuery对象，可用$(ele)[0]和get()转换为DOM对象
         //选择器
             //层级选择器：
                 //空格：jQuery后代选择器（选择所有的后代元素）
@@ -40,10 +48,13 @@
                 //.next(".liItem")：选择指定元素中匹配条件的后面兄弟元素，如匹配".liItem"
                 //.find("#li04")：选择所有符合匹配条件的后代元素，如匹配"#li04"
                 //.children("div")：选择指定元素中匹配条件的所有子元素，如匹配"div"
-                //.each(fn)：对指定元素中的每一个都执行fn操作。
+                //.each(fn)：对指定元素中的每一个都执行fn操作，返回只有指定元素组合中执行函数后的第一个值
                     //fn(index,ele)：
                         //index：当前执行元素jQuery的index值
                         //ele：指向当前执行元素，ele==this，$(ele)!=$(this)，因为两者DOM指向一样，但jQuery内存空间不同
+                    //该方法可用$.each($(),fn(index,ele))代替
+                //.map(fn)：与上区别为返回所有指定元素组合中执行函数后的值，并组装成数组
+                    //该方法可用$.map($(),fn(ele,index))代替，与$.each($(),fn(index,ele))参数位置不一
         //属性操作
             //css属性样式操作方法：
                 //.css（"style"）：获得style样式的值，返回该值
@@ -127,7 +138,8 @@
                 //.one()方法：类比.bind()方法，绑定event一次性事件，只相应一次，响应后清除该绑定
                 //.delegate("child","event",fn)方法：类比.bind()方法，通过指定元素来将child子元素绑定事件，比.bind()好
                     //注意：实际上没有绑定child元素，而是绑定了指定的元素，但通过冒泡效果来实现了
-                //.on("event","child",fn)方法：与上对比参数位置不一，jQuery1.7版本后才有，强烈推荐使用，child可用选择器
+                //.on("event",["child"],fn)方法：与上对比参数位置不一，jQuery1.7版本后才有，强烈推荐使用
+                    //注意：child可用选择器，作用为过滤选择，若省略或null时候则绑定所有
             //解绑事件：
                 //.unbind("event")：解绑bind的event事件
                 //.undelegate("event")：解绑delegate的event事件
@@ -139,13 +151,14 @@
             //event对象：
                 //event.data：获取传递的额外事件相应方法的额外参数
                 //event.currentTarget：在事件相应方法中等同于this，当前Dom对象
-                //event.target：事件触发源，不一定==this
+                //event.target：事件触发的真正源，可能是事件绑定元素的子元素，不一定==this
                 //event.pageX：鼠标距离页面左边的距离
                 //event.pageY：鼠标距离页面顶端的距离
                 //event.stopPropagation()：阻止事件冒泡
                 //event.preventDefault()：阻止默认行为
                 //event.type：事件类型，如click,dbclick
-                //event.which：鼠标的按键类型：左1中2右3
+                //event.which：获取鼠标的按键，左1中2右3
+                //event.keyCode：获取键盘的按键，输出为键盘字幕的编码
 
         // 入口函数的方式1
         $(document).ready(function () {
@@ -154,6 +167,19 @@
         // 入口函数的方式2
         //jQuery与js入口函数区别：jQuery入口函数可写多个，但js入口函数只可一个
         $(function () {
+            //jQuery开发插件
+            //全局对象方法
+            $.log=function(){
+                console.log(new Date());//添加打印时间方法
+            }
+            //拓展普通jQuery对象方法，$.fn为jQuery对象的原型
+            $.fn.log=function(){
+                console.log($(this).text());//添加打印内容方法
+            }
+            //懒加载（延迟加载）
+            $(".lazy").lazyload();
+
+            //中部轮播图添加
             var li_num = 6;
             var li_create = $("#circle")//创建结点
                     .css("margin-left",(-14 * li_num) + "px")//使得li居中
@@ -175,14 +201,16 @@
             }).find("img").each(function(index,ele){
                 $(this).attr("src","images/" + (index+1) + "" + (index+1) + ".jpg")
             })
+            $("#scroll").data("current",0);//data()：给jQuery对象添加自定义属性
 
             //中部轮播图交互
             //函数：切换图片
             function current(current_index){
-                var pre_index=$("#scroll").find(".current").index();
+                var pre_index=$("#scroll").data("current");//获取jQuery对象的自定义属性
                 if(pre_index!=current_index){//相同的时候不执行
                     $("#scroll").find(".current").removeClass("current");
                     $("#scroll li").eq(current_index).addClass("current");
+                    $("#scroll").data("current",current_index);//修改Query对象的自定义属性
                     $(".pic_bigbox a").eq(current_index).show();//显示选中的图片
                     var left_left="0px";
                     var right_left=-1*$(".pic_bigbox a").first().width()+"px";
@@ -206,54 +234,49 @@
                     clearInterval($(".pic_bigbox")[0].move);//停止自动切换
                     current($(this).index());//使用自定义属性，免除for循环后i总为6的干扰，可以做tab栏切换效果
             }).mouseleave(function () {//当鼠标移出时恢复自动切换
-                $(".pic_bigbox")[0].move=setInterval(function(){
-                    $("#arr a:last").triggerHandler("click");//触发绑定事件
-                }, 1500);
+                switch_auto();
             })
             //当鼠标点击两个三角则切换图片，鼠标移动到时暂时停止自动切换，鼠标移开恢复
             $("#arr a").click(function(){
-                var pre_index=$("#scroll").find(".current").index();
+                var pre_index=$("#scroll").data("current");//获取jQuery对象的自定义属性
+                clearInterval($(".pic_bigbox")[0].move);//停止自动切换
                 if($(this).hasClass("arrow-l")){//左三角
                     pre_index=pre_index<=0?$("#scroll li:last").index()+1:pre_index;
-                    $("#scroll li").eq(pre_index-1).triggerHandler("mouseenter");//触发绑定事件
+                    current(pre_index-1);
                 }else{//右三角
                     pre_index=pre_index>=$("#scroll li:last").index()?-1:pre_index;
-                    $("#scroll li").eq(pre_index+1).triggerHandler("mouseenter");//触发绑定事件
+                    current(pre_index+1);
                 }
-            }).mouseleave(function () {
-                $("#scroll").find(".current").triggerHandler("mouseleave");
-            })
+                switch_auto();
+            });
+            //函数：限时自动切换图片
+            function switch_auto(){
+                $(".pic_bigbox")[0].move=setInterval(function(){
+                    $("#arr a:last").triggerHandler("click");
+                }, 1500);
+            }
             //限时自动切换图片
-            $(".pic_bigbox")[0].move=setInterval(function(){
-                $("#arr a:last").triggerHandler("click");//触发绑定事件
-            }, 1500);
+            switch_auto();
 
             //登录
             //click(function(){})：jQuery事件处理
             $("#login").click(function (event) {
-//                var event = event_conpatible(event);
                 $("#mask").show("fast");
                 $("#login_box").show(500);
                 $(document.body).css("overflow","hidden");//利用hidden隐藏滚动条
                 //禁止冒泡，原因：点击$("#login")后会触发document.onclick，显示不出登录框
-//                bubble_cancel(event);
+                event.stopPropagation();
+                //取消登录，点击登录框以外的地方也可取消登录
+                $(document).on("click",function(e){
+                    var click_id=$(e.target).attr("id");//获取点击源元素的id
+                    //点击“×”或者登录框以外的地方取消登录
+                    if(click_id!="login_box"||click_id=="close_login"){
+                        $("#mask").slideUp();
+                        $("#login_box").fadeOut();
+                        document.body.style.overflow = "visible";//显示回滚动条
+                    }
+                })
             })
-            //取消登录
-            $("#close_login").click(function () {
-                $("#mask").slideUp();
-                $("#login_box").fadeOut();
-                document.body.style.overflow = "visible";//显示回滚动条
-            })
-//            //点击登录框以外的地方取消登录
-//            document.onclick = function (event) {
-//                var event = event_conpatible(event);
-//                //判断事件对象的id，target：事件被传送到的对象
-//                if (event_id(event) != "login_box") {
-//                    $("#mask").style.display = "none";
-//                    $("#login_box").style.display = "none";
-//                    document.body.style.overflow = "visible";//显示回滚动条
-//                }
-//            }
 
             //搜索框的交互
             $("#txt").focus(function () {//得到焦点
@@ -368,14 +391,7 @@
             var move_top = $("#move_top");
             $("#move_top").click(function () {
                 var target = 0;
-//                $(document).animate({scrollTop:target})
-                //window.scrollTo(x,y)：去往页面的(x,y)
-//                move_slow_or_constant(move_top, {"default": target}, "slow", 10, function () {
-//                            return {default: scroll_().top}
-//                        },
-//                        function (x) {
-//                            window.scrollTo(0, x)
-//                        });
+                $(document).scrollTop(0);//返回到顶端
             })
         })
     </script>
@@ -860,11 +876,12 @@
             京东旗下网站：京东钱包|京东云
         </div>
         <div class="message">
-            <a href="#"><img src="images/mess.png" alt=""></a>
-            <a href="#"><img src="images/mess2.png" alt=""></a>
-            <a href="#"><img src="images/mess3.png" alt=""></a>
-            <a href="#"><img src="images/mess4.png" alt=""></a>
-            <a href="#"><img src="images/mess5.png" alt=""></a>
+            <!--懒加载使用：src替换成data-original，并预先定义height和width-->
+            <a href="#"><img class="lazy" data-original="images/mess.png" height="32" width="103" alt=""></a>
+            <a href="#"><img class="lazy" data-original="images/mess2.png" height="32" width="103" alt=""></a>
+            <a href="#"><img class="lazy" data-original="images/mess3.png" height="32" width="103" alt=""></a>
+            <a href="#"><img class="lazy" data-original="images/mess4.png" height="32" width="103" alt=""></a>
+            <a href="#"><img class="lazy" data-original="images/mess5.png" height="32" width="185" alt=""></a>
         </div>
     </div>
 </div>
