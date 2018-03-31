@@ -95,6 +95,26 @@ s,i,em{font-style:normal;text-decoration:none;}
     font-size: 15px;
     cursor: pointer;
 }
+#login_box table{
+    /*边框折叠*/
+    border-collapse: collapse;
+    /*边框间距，一般与边框折叠配合使用，实现合并边框效果*/
+    border-spacing: 0;
+    border: 1px solid #c0c0c0;
+}
+#login_box th,td{
+    border: 1px solid #d0d0d0;
+    color: #404060;
+    padding: 10px;
+}
+#login_box th{
+    background-color: #09C;
+    font: bold 16px "微软雅黑";
+    color: #fff;
+}
+#login_box td{
+    font: 14px "微软雅黑";
+}
 .shortcut{
     height: 30px;
     line-height: 30px;
