@@ -12,6 +12,7 @@
     <!--jQueryUI使用方法：引入jQuery→引入QueryUI的js→引入QueryUI的css→跟着demo写http://www.jqueryui.org.cn/-->
     <script src="jQuery/jquery.color.js" type="text/javascript"></script>
     <script src="jQuery/jquery.lazyload.js" type="text/javascript"></script>
+    <script src="js/city_face.js" type="text/javascript"></script>
     <script>
         //api查询：https://api.jquery.com/
         //$操作
@@ -53,7 +54,7 @@
                 //.not(".current")：去除，与.filter相反
                 //.each(fn)：对指定元素中的每一个都执行fn操作，返回只有指定元素组合中执行函数后的第一个值
                     //fn(index,ele)：
-                        //index：当前执行元素jQuery的index值
+                        //index：当前执行元素jQuery的index索引值
                         //ele：指向当前执行元素，ele==this，$(ele)!=$(this)，因为两者DOM指向一样，但jQuery内存空间不同
                     //该方法可用$.each($(),fn(index,ele))代替
                 //.map(fn)：与上区别为返回所有指定元素组合中执行函数后的值，并组装成数组
@@ -87,6 +88,9 @@
                 //.scrollTop([value]):获得/设置指定元素依靠其滚动条隐藏的高度
                 //.scrollLeft([value]):获得/设置指定元素依靠其滚动条隐藏的从左往右的宽度
         //节点操作
+            //创建结点：
+                //$(node)：创建结点，如创建div（"<div></div>"）
+                //.html(node)：创建结点，如创建div（"<div></div>"）
             //内部插入节点：
                 //.append(node)：往后追加子节点，将node节点放到指定节点里的最后，如：.append("<p>p元素</p>")
                 //.appendTo(node)：往后追加子节点，将指定节点放到node节点里的最后
@@ -150,7 +154,7 @@
             //触发事件：
                 //直接触发，如：$("div").click();
                 //.trigger("event",[data])：触发指定元素的event事件，第二个参数可用[X,Y,Z]传递参数，会触发默认行为
-                //.triggerHandler("event",[data])：同上，但不会触发默认行为，也不会产生冒泡
+                //.triggerHandler("event",[data])：同上，但不会触发默认行为，不触发事件，只触发响应函数，不会产生冒泡
             //event对象：
                 //event.data：获取传递的额外事件相应方法的额外参数
                 //event.currentTarget：在事件相应方法中等同于this，当前Dom对象
@@ -184,9 +188,14 @@
             //懒加载（延迟加载）
             $(".lazy").lazyload();
 
+            //送货地址处理
+            initCity($("#province"),$("#city"));
+            //上来后初始化一下城市的数据
+            $("#province").triggerHandler('change');
+
             //中部轮播图添加
             var li_num = 6;
-            var li_create = $("#circle")//创建结点
+            var li_create = $("#circle")
                     .css("margin-left",(-14 * li_num) + "px")//使得li居中
                     .html("<li><span></span></li>")//创建结点
                     .children("li");//让li_create指向li
@@ -293,17 +302,17 @@
             })
 
             //左侧栏dropdown的交互
-            $("#dd div").mouseenter(function(){
+            $("#dd").on("mouseenter","div",function(){
                 $("#showbox").css("width","1210px")
                 //.index()：获得元素的index，jQuery内置
                 $("#tab_box div:eq("+$(this).index()+")")
-//                        .eq($(this).index())
+                //                        .eq($(this).index())
                         .addClass("current")
                         .siblings()
                         .removeClass("current")//链式编程
             })
             //当鼠标指向items h3和items span时，会触发，但可以禁止冒泡
-            $("#showbox").mouseleave(function () {
+            $("#showbox").on("mouseleave",function () {
                 $(this).css("width","210px");
                 $("#tab_box div").removeClass("current")
             })
@@ -313,30 +322,32 @@
             var home_width = $(".movebox").css("width");
             var return_target = home_target;
             var return_width = home_width;
-            //滑动到鼠标所在的li
-            $("#move_ul li").mouseenter(function () {
-                $(".movebox").stop(true,false).animate({
-                    "left":this.offsetLeft,
-                    "width":$(this).css("width")
-                },300);
-            })
-            //点击后锁定，不滑回原来的位置
-            $("#move_ul li").mousedown(function (event) {//event可以换成自定义，如aa，代表事件
-                if (event.which == 1) {//获取jquery按键。1左键,2中键，3右键
-                    return_target = $(this).position().left;//获取与父元素左侧的距离，并修改return_target值
-                    return_width = $(this).css("width");
-                } else if (event.which == 2 || event.which == 3) {
-                    return_target = home_target;
-                    return_width = home_width;
+            $("#move_ul li").on({
+                //滑动到鼠标所在的li
+                "mouseenter":function () {
+                    $(".movebox").stop(true,false).animate({
+                        "left":this.offsetLeft,
+                        "width":$(this).css("width")
+                    },300);
+                },
+                //点击后锁定，不滑回原来的位置
+                "mousedown":function (event) {//event可以换成自定义，如aa，代表事件
+                    if (event.which == 1) {//获取jquery按键。1左键,2中键，3右键
+                        return_target = $(this).position().left;//获取与父元素左侧的距离，并修改return_target值
+                        return_width = $(this).css("width");
+                    } else if (event.which == 2 || event.which == 3) {
+                        return_target = home_target;
+                        return_width = home_width;
+                    }
+                },
+                //滑回原来/锁定的位置
+                "mouseleave":function () {
+                    $(".movebox").stop(true,false).animate({
+                        "left":return_target,
+                        "width":return_width
+                    },300);
                 }
-            })
-            //滑回原来/锁定的位置
-            $("#move_ul li").mouseleave(function () {
-                $(".movebox").stop(true,false).animate({
-                    "left":return_target,
-                    "width":return_width
-                },300);
-            })
+            });
 
             //absolute→fix框交互+广告交互（跟随缓动）
             //absolute变向fix
@@ -344,7 +355,7 @@
             var box_top = $("#absolute_fix_box").position().top;
             var advertisement_top = $(".advertisement").position().top;
             //window.onscroll：页面滚动事件；window.onresize：窗口改变事件
-            $(window).scroll(function () {
+            $(window).on("scroll",function () {
                 //把滚动的数据写在页面标题
 //                var scroll_top = scroll_().top;
                 var scroll_top = $(document).scrollTop();//获取页面滚动高度
@@ -366,7 +377,7 @@
             var star = [10, 2, 3, 4, 5, 6, 7, 8, 9, 10, 3, 5];//数组
             var xz_bottom = ["白羊", "金牛", "双子", "巨蟹", "狮子", "处女", "天秤", "天蝎", "射手", "魔蝎", "水瓶", "双鱼"];
             //下拉框交互，value反应在selece上，onchange为检测下拉框状态改变
-            $("#sele").change(function () {
+            $("#sele").on("change",function () {
                 var width = star[$(this).val()- 1] * 80 / 10;
                 $("#star").css("width",width + "px");
                 var x = -391 - ($(this).val()- 1) * 36;
@@ -380,13 +391,11 @@
 //            drag(slider_bar, slider_bar);
             //slider_mask填充效果
             //关闭absolute→fix框
-            $("#close_absolute_fix_box").click(function () {
+            $("#close_absolute_fix_box").on("click",function () {
                 $("#absolute_fix_box").hide();
             })
             //点击△返回到页面顶端
-            var move_top = $("#move_top");
-            $("#move_top").click(function () {
-                var target = 0;
+            $("#move_top").on("click",function () {
                 $(document).scrollTop(0);//返回到顶端
             })
         })
@@ -428,9 +437,9 @@
     <div class="w">
         <!--快捷键.fl+.fr-->
         <div class="fl">
-            <div class="dt">送至：北京
-                <!--快捷键i>s，>的意思是包含。<i> 定义与文本中其余部分不同的部分，并把这部分文本呈现为斜体文本。被用来表示科技术语、其他语种的成语俗语、想法、宇宙飞船的名字等等。在没有其他适当语义的元素可以使用时，请使用 <i> 元素。标签可定义加删除线文本定义。-->
-                <i><s>◇</s></i>
+            <div class="dt">送至：
+                <select name="province" id="province"></select>
+                <select name="city" id="city"></select>
             </div>
         </div>
         <div class="fr">
@@ -967,6 +976,7 @@
     <div class="liuyan" id="liuyan">
         <textarea name="" id="" cols="30" rows="10" ></textarea>
         <button class="fb">发布</button>
+        <a href="javascript:void(0);" class="insertFace">表情</a>
         <ul></ul>
     </div>
     <script>
@@ -1000,7 +1010,6 @@
                 inputs[i].checked=!(inputs[i].checked);
             }
         })
-
         //留言板
         var txt=$("#liuyan textarea");
 //        var fbbtn=$("#liuyan button");
@@ -1024,6 +1033,8 @@
                 })
             }
         })
+        //表情
+        initFaces($(".insertFace"),$("#liuyan textarea"));
     </script>
 </div>
 <!--absolute→fix框结束-->

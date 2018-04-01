@@ -267,6 +267,7 @@
 }
 #absolute_fix_box .liuyan{
     width: 100%;
+    position: relative;
 }
 .time p{
     text-align: left;/*向左对齐*/
@@ -330,12 +331,26 @@
 }
 .liuyan .fb{
     font: 20px/20px "宋体";
+    position: absolute;
+    top: 0;
+    right: 8px;
     background-color: white;
     border: 1px solid;
     color: black;
     float: right;
-    margin-top: 10px;
     cursor: pointer;
+}
+.liuyan .insertFace{
+    font: 20px/20px "宋体";
+    position: absolute;
+    top: 23px;
+    right: 8px;
+}
+.liuyan .insertFace .showFace {
+    position: absolute;
+    background-color: #f0f0f0;
+    border: 1px solid #a0a0a0;
+    width: 200px;
 }
 .liuyan ul{
     list-style: none;
